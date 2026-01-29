@@ -9,6 +9,8 @@ import Book from '@/pages/Book';
 import LeadMagnet from '@/pages/LeadMagnet';
 import Contact from '@/pages/Contact';
 import Blog from '@/pages/Blog';
+import Login from '@/pages/Login';
+import Admin from '@/pages/Admin';
 import Chatbot from '@/components/chatbot/Chatbot';
 
 function App() {
@@ -26,6 +28,8 @@ function App() {
           <Route path="/book" element={<Book />} />
           <Route path="/lead-magnet" element={<LeadMagnet />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/admin" element={<Admin />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <Chatbot />
