@@ -12,10 +12,33 @@ const Contact = () => {
     });
     const [status, setStatus] = useState('idle'); // idle, loading, success
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setStatus('loading');
-        setTimeout(() => setStatus('success'), 1500);
+
+        try {
+            const response = await fetch('/api/send', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    type: 'contact',
+                    ...formData
+                }),
+            });
+
+            if (response.ok) {
+                setStatus('success');
+                setFormData({ name: '', email: '', company: '', message: '' });
+            } else {
+                throw new Error('Failed to send');
+            }
+        } catch (error) {
+            console.error('Error sending message:', error);
+            setStatus('error');
+            setTimeout(() => setStatus('idle'), 3000);
+        }
     };
 
     const contactInfo = [
@@ -180,7 +203,7 @@ const Contact = () => {
                                             disabled={status === 'loading'}
                                             className="w-full bg-primary hover:bg-primary/90 text-white py-6 rounded-2xl text-xl font-black transition-all hover:scale-[1.02] active:scale-[0.98] glow-btn flex items-center justify-center gap-3 disabled:opacity-50"
                                         >
-                                            {status === 'loading' ? 'Deploying...' : 'Deploy Message'}
+                                            {status === 'loading' ? 'Deploying...' : status === 'error' ? 'Error - Try Again' : 'Deploy Message'}
                                             <Send className="w-5 h-5" />
                                         </button>
 

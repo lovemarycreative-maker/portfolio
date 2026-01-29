@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Layout from '@/components/layout/Layout';
 import { motion } from 'framer-motion';
 import { Calendar, User, ArrowRight, Search, Tag } from 'lucide-react';
@@ -44,6 +44,33 @@ const posts = [
 ];
 
 const Blog = () => {
+    const [email, setEmail] = useState('');
+    const [status, setStatus] = useState('idle');
+
+    const handleNewsletterSubmit = async (e) => {
+        e.preventDefault();
+        setStatus('loading');
+
+        try {
+            const response = await fetch('/api/send', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'newsletter', email }),
+            });
+
+            if (response.ok) {
+                setStatus('success');
+                setEmail('');
+                setTimeout(() => setStatus('idle'), 3000);
+            } else {
+                throw new Error('Failed');
+            }
+        } catch (error) {
+            setStatus('error');
+            setTimeout(() => setStatus('idle'), 3000);
+        }
+    };
+
     return (
         <Layout>
             <div className="pt-40 pb-32">
@@ -141,17 +168,28 @@ const Blog = () => {
                             <p className="text-muted-foreground mb-10 text-lg">
                                 Join 5,000+ agency owners getting weekly GHL tips, snapshots, and AI automation news.
                             </p>
-                            <form onSubmit={(e) => { e.preventDefault(); window.location.href = '/contact'; }} className="flex flex-col sm:flex-row gap-4">
+                            <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-4">
                                 <input
                                     type="email"
                                     placeholder="Enter your work email"
                                     required
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     className="flex-1 bg-white/5 border border-white/10 rounded-2xl px-6 py-5 focus:border-primary outline-none transition-colors font-bold"
                                 />
-                                <button type="submit" className="bg-primary hover:bg-primary/90 text-white px-10 py-5 rounded-2xl font-black transition-all glow-btn whitespace-nowrap">
-                                    Join Newsletter
+                                <button
+                                    type="submit"
+                                    disabled={status === 'loading' || status === 'success'}
+                                    className="bg-primary hover:bg-primary/90 text-white px-10 py-5 rounded-2xl font-black transition-all glow-btn whitespace-nowrap disabled:opacity-70 disabled:cursor-not-allowed"
+                                >
+                                    {status === 'loading' ? 'Joining...' : status === 'success' ? 'Joined!' : 'Join Newsletter'}
                                 </button>
                             </form>
+                            {status === 'success' && (
+                                <p className="text-green-500 font-bold mt-4 animate-in fade-in slide-in-from-bottom-2">
+                                    Thanks for subscribing! Check your inbox soon.
+                                </p>
+                            )}
                         </div>
                     </div>
                 </div>
