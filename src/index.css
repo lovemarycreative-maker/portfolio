@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: oklch(0.12 0.02 240);
+  --color-foreground: oklch(0.98 0 0);
+
+  --color-card: oklch(0.14 0.02 240);
+  --color-card-foreground: oklch(0.98 0 0);
+
+  --color-popover: oklch(0.12 0.02 240);
+  --color-popover-foreground: oklch(0.98 0 0);
+
+  --color-primary: oklch(0.6 0.25 250);
+  --color-primary-foreground: oklch(1 0 0);
+
+  --color-secondary: oklch(0.25 0.02 240);
+  --color-secondary-foreground: oklch(0.98 0 0);
+
+  --color-muted: oklch(0.25 0.02 240);
+  --color-muted-foreground: oklch(0.65 0.02 240);
+
+  --color-accent: oklch(0.65 0.2 150);
+  --color-accent-foreground: oklch(1 0 0);
+
+  --color-destructive: oklch(0.4 0.15 25);
+  --color-destructive-foreground: oklch(0.98 0 0);
+
+  --color-border: oklch(0.25 0.02 240);
+  --color-input: oklch(0.25 0.02 240);
+  --color-ring: oklch(0.6 0.25 250);
+
+  --color-bg-secondary: oklch(0.12 0.03 260);
+  --color-bg-tertiary: oklch(0.08 0.02 240);
+
+  --radius-lg: 0.75rem;
+  --radius-md: calc(0.75rem - 2px);
+  --radius-sm: calc(0.75rem - 4px);
+
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
+
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+}
+
+@layer utilities {
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_auto] animate-[gradient_5s_ease_infinite];
+  }
+
+  .glass-card {
+    @apply bg-card/50 backdrop-blur-md border border-white/10;
+  }
+
+  .grid-pattern {
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 30px 30px;
+  }
+
+  .section-gradient {
+    @apply bg-gradient-to-b from-transparent via-primary/5 to-transparent;
+  }
+
+  .hover-lift {
+    @apply transition-transform duration-300 hover:-translate-y-2;
+  }
+
+  .glow-btn {
+    box-shadow: 0 0 20px rgba(0, 102, 255, 0.3);
+    transition: box-shadow 0.3s ease;
+  }
+
+  .glow-btn:hover {
+    box-shadow: 0 0 30px rgba(0, 102, 255, 0.5);
+  }
+}
